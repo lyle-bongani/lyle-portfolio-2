@@ -1,0 +1,21 @@
+node_modules
+dist
+.vercel
+.env*
+*.log
+
+# working files that are not part of the site
+tools/archive/
+tools/shots/
+tools/textures/
+tools/*.blend1
+tools/*.png
+tools/scene.blend
+tools/world.blend
+tools/saitama_*.blend
+tools/hero_candidate.blend
+
+# not part of this project
+mcp-for-blender/
+.claude/
+blender_capture_temp.png

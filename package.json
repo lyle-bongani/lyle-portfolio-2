@@ -1,0 +1,21 @@
+{
+  "name": "scroll-story-show",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "shot": "node tools/shot.mjs",
+    "build:hero": "blender --background --factory-startup --python tools/hero_v2.py -- public/models/hero_v2.glb tools/hero_v2.blend",
+    "build:planets": "blender --background --factory-startup --python tools/solar_system.py -- public/models/solar.glb tools/solar_system.blend",
+    "build:galaxy": "blender --background --factory-startup --python tools/milky_way.py -- public/models/milkyway.glb tools/milky_way.blend"
+  },
+  "dependencies": {
+    "three": "^0.180.0"
+  },
+  "devDependencies": {
+    "vite": "^7.1.0"
+  }
+}

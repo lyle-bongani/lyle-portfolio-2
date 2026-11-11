@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="en" class="gate">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>Lyle Chadya — Web developer</title>
+    <meta name="description" content="Lyle Chadya, web developer. A portfolio that crosses the solar system: React, Three.js and motion." />
+    <meta name="theme-color" content="#000000" />
+    <link rel="icon" href="data:," />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Geist:wght@300..600&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet" />
+    <script type="module" src="/src/main.js"></script>
+  </head>
+  <body>
+    <canvas id="gl" aria-hidden="true"></canvas>
+    <div id="scroll" aria-hidden="true"></div>
+
+    <main id="ui">
+      <header class="top">
+        <button class="mark" data-jump="0" aria-label="Back to the start">
+          <span class="mark-pic" aria-hidden="true"><b id="mark-initials"></b></span>
+          <span class="mark-word" id="mark-name"></span>
+        </button>
+        <p class="counter mono" aria-live="polite"><span id="count-now">00</span><span class="counter-sep">/</span><span id="count-all">06</span></p>
+        <button class="sound-btn mono" id="sound-btn" aria-pressed="false"><i aria-hidden="true"></i>Sound <span>off</span></button>
+      </header>
+
+      <nav class="index" id="index" aria-label="Chapters"><ol id="index-list"></ol></nav>
+      <div class="rail" aria-hidden="true"><i class="rail-fill" id="rail-fill"></i><span class="rail-now mono" id="rail-now"></span></div>
+
+      <section class="block intro" id="intro">
+        <p class="kicker mono" id="intro-kicker"></p>
+        <h1 class="intro-title" id="intro-title"></h1>
+        <p class="intro-now"><i aria-hidden="true"></i><span id="status-text"></span> <a id="status-link"></a></p>
+      </section>
+
+      <section class="block chapter" id="chapter" aria-live="polite">
+        <p class="ch-meta mono"><span class="ch-num" id="ch-num"></span><span class="ch-rule"></span><span>Chapter</span></p>
+        <h2 class="ch-title" id="ch-title"></h2>
+        <p class="ch-line" id="ch-line"></p>
+        <dl class="ch-stats" id="ch-stats"></dl>
+      </section>
+
+      <div class="block work-labels" id="work-labels"></div>
+      <div class="frame-tags" id="frame-tags" aria-hidden="true"></div>
+
+      <footer class="footer" id="footer">
+        <div class="ft-l">
+          <p class="ft-kick mono" id="ft-kick"></p>
+          <h2 class="ft-title"><span id="ft-title"></span> <em id="ft-soft"></em></h2>
+        </div>
+        <div class="ft-r">
+          <a class="ft-mail" id="ft-mail"></a>
+          <nav class="ft-links mono" id="ft-links" aria-label="Elsewhere"></nav>
+        </div>
+        <div class="ft-base mono">
+          <span id="ft-copy"></span>
+          <button class="mono" data-jump="0">Begin again ↑</button>
+        </div>
+      </footer>
+
+      <div class="scroll-cue mono" id="cue"><span>Scroll</span><i></i></div>
+      <a class="pill-link" id="pill"><span>Get in touch</span><span class="pill-go" aria-hidden="true">↗</span></a>
+    </main>
+
+    <dialog class="work-modal" id="work-modal" aria-labelledby="wm-title">
+      <header class="wm-head">
+        <div>
+          <p class="mono wm-tag" id="wm-tag"></p>
+          <h3 class="wm-title" id="wm-title"></h3>
+          <p class="wm-desc" id="wm-desc"></p>
+        </div>
+        <button class="wm-close" id="wm-close" aria-label="Close">✕</button>
+      </header>
+      <div class="wm-stage" id="wm-stage"></div>
+      <dl class="wm-meta mono" id="wm-meta"></dl>
+    </dialog>
+
+    <div id="loader">
+      <div class="loader-inner">
+        <p class="mono loader-k" id="loader-k">Laying the thread</p>
+        <div class="loader-bar"><i id="loader-fill"></i></div>
+        <p class="mono loader-p" id="loader-p">000</p>
+        <div class="loader-enter" id="loader-enter" hidden>
+          <button class="enter-btn on" data-enter="sound">Enter with sound</button>
+          <button class="enter-btn" data-enter="mute">Enter muted</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="cursor" aria-hidden="true"><i class="c-dot"></i><i class="c-ring"></i></div>
+  </body>
+</html>
