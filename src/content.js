@@ -72,7 +72,7 @@ export const chapters = [
     line: 'Sites taken from first idea to live launch: designed, built and shipped.',
     stats: [
       { value: '2 yrs', label: 'Building websites and web apps' },
-      { value: 'Co-founder', label: 'DL Origin: websites, hosting and domains from Harare' },
+      { value: 'Co-founder', label: 'DL Origin: websites, hosting and domains from Bulawayo' },
     ],
   },
   {
@@ -107,7 +107,7 @@ export const projects = [
     name: 'DL Origin',
     tag: 'Web agency · Co-founded',
     color: '#ff7a00',
-    blurb: 'Websites, hosting, domains and business email from Harare, with one team and one bill. Websites from $300, hosting from $3 a month.',
+    blurb: 'Websites, hosting, domains and business email from Bulawayo, with one team and one bill. Websites from $300, hosting from $3 a month.',
     role: 'Co-founder: design, build and run the business',
     stack: 'Next.js, React, TypeScript, Tailwind CSS, GSAP, Lenis',
     href: 'https://www.dlorigin.com/',
