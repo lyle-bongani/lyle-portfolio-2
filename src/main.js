@@ -133,6 +133,11 @@ function build() {
   $('ft-soft').textContent = footer.titleSoft;
   $('ft-mail').textContent = `${site.email} →`;
   $('ft-mail').href = `mailto:${site.email}`;
+  if (site.cv) {
+    const cv = Object.assign(el('a', 'ft-cv mono', 'Download CV ↓'), { href: site.cv, target: '_blank', rel: 'noopener' });
+    cv.setAttribute('download', 'Lyle-Chadya-CV.pdf');
+    $('ft-mail').after(cv);
+  }
   $('ft-links').replaceChildren(
     ...site.links.map((l) => Object.assign(el('a', '', `${l.label} ↗`), { href: l.href })),
   );

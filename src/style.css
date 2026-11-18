@@ -494,6 +494,26 @@ html.over-screen body {
   font-size: clamp(1rem, 1.4vw, 1.15rem);
   text-decoration: none;
 }
+.ft-cv {
+  display: block;
+  width: fit-content;
+  margin: 14px 0 0 auto;
+  padding: 10px 18px;
+  border-radius: 99px;
+  background: var(--ink);
+  color: #0a0606;
+  font-size: 0.8rem;
+  text-decoration: none;
+  transition: transform 0.3s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+.ft-cv:hover {
+  transform: translateY(-2px);
+}
+@media (max-width: 800px) {
+  .ft-cv {
+    margin-left: 0;
+  }
+}
 .ft-links {
   display: flex;
   justify-content: flex-end;

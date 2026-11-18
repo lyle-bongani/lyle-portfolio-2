@@ -10,6 +10,7 @@ export const site = {
   year: 2026,
   status: { text: 'Co-founder of', link: 'DL Origin', href: 'https://www.dlorigin.com/' },
   also: { text: 'Part of', link: 'Uncommon.org', href: 'https://uncommon.org/' },
+  cv: '/Lyle-Chadya-CV.pdf', // the CV in public/: shown as "Download CV" at the end of the trip
   links: [
     { label: 'GitHub', href: 'https://github.com/lyle-bongani' },
     { label: 'LinkedIn', href: 'https://www.linkedin.com/in/lyle-chadya-368930358/' },
