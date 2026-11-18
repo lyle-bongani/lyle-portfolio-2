@@ -183,7 +183,7 @@ export const projects = [
     href: 'https://www.lyle-portfolio.dev/',
     facts: [
       { value: "WebGL", label: "Interactive 3D scenes" },
-      { value: "14", label: "Projects on show" },
+      { value: "13", label: "Projects on show" },
     ],
     study: {
       brief: "My main portfolio had to show what I can do with WebGL, not just list it.",
