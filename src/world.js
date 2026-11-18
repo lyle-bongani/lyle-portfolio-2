@@ -37,7 +37,7 @@ for (const p of Object.values(PLANETS)) {
   p.dir.normalize();
   p.side = new THREE.Vector3().crossVectors(p.dir, UP).normalize();
 }
-const GIANT = { c: V(0, -3, -680), r: 15, loop: 25, tilt: rad(11) }; // Saturn
+const GIANT = { c: V(0, -3, -690), r: 24, loop: 40, tilt: rad(11) }; // Saturn: the biggest stop, it holds every project
 const GALAXY = { c: V(0, -120, -1560), r: 250 }; // the Milky Way, seen from outside at the very end
 const SUN = { c: V(-95, 40, -70), r: 30 };
 // passed on the way, never landed on: [model, centre, radius, sky colour]
@@ -345,7 +345,8 @@ export function createWorld(renderer, onProgress) {
   scene.add(giantAir);
   const belt = new THREE.Group();
   tilted.add(belt);
-  const giantLight = lamp(0xffd890, 120, 60, GIANT.c.clone().add(V(0, 22, 12)));
+  const giantLight = lamp(0xffd890, 190, 95, GIANT.c.clone().add(V(0, GIANT.r * 1.45, GIANT.r * 0.8)));
+  const screens = []; // the screen faces you can click, one or more per project
 
   /* -- the Milky Way, built in Blender (tools/milky_way.py). Hidden until the jump, so the last page is the reveal -- */
   const galaxy = new THREE.Group();
@@ -587,15 +588,20 @@ export function createWorld(renderer, onProgress) {
             const pIn = STOPS.find((k) => k[1] === 'giantIn')[0];
             const pOut = STOPS.find((k) => k[1] === 'giantOut')[0];
             const deg = -35 + 285 * ((pMid - pIn) / (pOut - pIn)) + 2;
-            m.position.copy(aroundGiant(deg, 19.5, -4.2));
-            m.lookAt(aroundGiant(deg - 14, 40, 0.5)); // face outward, turned a little toward the camera that follows him
-            m.scale.setScalar(4.4); // big enough to read from where the camera flies
+            // inside the hero's loop, between him and the planet, so the camera sees each one clearly as he passes
+            m.position.copy(aroundGiant(deg, GIANT.loop - 7.5, -5.2));
+            m.lookAt(aroundGiant(deg - 12, GIANT.loop * 1.7, 0.5)); // face outward, turned a little toward the camera that follows him
+            m.scale.setScalar(5.4); // big enough to read from where the camera flies
             m.traverse((o) => {
-              if (!o.isMesh || !o.name.includes('Screen')) return;
+              if (!o.isMesh) return;
+              o.userData.project = i; // the whole monitor is clickable, not just the glass
+              screens.push(o);
+              if (!o.name.includes('Screen')) return;
               const map = project.image ? tex.load(project.image) : screenTexture(project, i);
               map.colorSpace = THREE.SRGBColorSpace;
               map.flipY = false; // models exported from Blender use flipped V
               o.material = new THREE.MeshBasicMaterial({ map, color: hot(0.8, 0.8, 0.8), fog: false });
+              o.userData.glass = true;
             });
             scene.add(m);
           });
@@ -795,5 +801,22 @@ export function createWorld(renderer, onProgress) {
     return { x: (proj.x * 0.5 + 0.5) * w, y: (-proj.y * 0.5 + 0.5) * h, visible: proj.z < 1 };
   }
 
-  return { scene, camera, update, ready, state, anchors, toScreen };
+  // which project screen is under the pointer (x, y from -1 to 1, y down), or -1
+  const ray = new THREE.Raycaster();
+  const ndc = new THREE.Vector2();
+  function pick(x, y) {
+    if (!screens.length) return -1;
+    ray.setFromCamera(ndc.set(x, -y), camera);
+    const hit = ray.intersectObjects(screens, false)[0];
+    return hit && hit.distance < 90 ? hit.object.userData.project : -1;
+  }
+  // the screen under the pointer lights up a little, so it reads as something to click
+  let lit = -1;
+  function highlight(i) {
+    if (i === lit) return;
+    lit = i;
+    for (const o of screens) if (o.userData.glass) o.material.color.setScalar(o.userData.project === i ? 1.25 : 0.8);
+  }
+
+  return { scene, camera, update, ready, state, anchors, toScreen, pick, highlight };
 }

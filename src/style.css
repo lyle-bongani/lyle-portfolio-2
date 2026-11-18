@@ -74,7 +74,7 @@ a {
   display: block;
 }
 #scroll {
-  height: 4400vh; /* how much scrolling the whole trip takes: bigger = slower travel */
+  height: 5000vh; /* how much scrolling the whole trip takes: bigger = slower travel (raised when Saturn grew) */
 }
 #ui {
   position: fixed;
@@ -357,12 +357,50 @@ a {
   letter-spacing: -0.03em;
   line-height: 1;
 }
+/* the button that opens the case study: solid, in the project colour, so it is obvious */
 .wl-cta {
-  color: var(--faint);
-  transition: color 0.3s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 11px 18px 11px 20px;
+  border-radius: 99px;
+  background: var(--pc);
+  color: #0a0606;
+  font-size: 0.86rem;
+  font-weight: 600;
+  box-shadow: 0 0 0 0 color-mix(in oklab, var(--pc) 60%, transparent);
+  transition:
+    transform 0.3s cubic-bezier(0.2, 0.7, 0.2, 1),
+    box-shadow 0.3s ease;
+  animation: cta-pulse 2.6s ease-out infinite;
 }
-.wl:hover .wl-cta {
-  color: var(--ink);
+.wl-go {
+  transition: transform 0.3s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+.wl:hover .wl-cta,
+.wl:focus-visible .wl-cta {
+  transform: translateY(-2px);
+}
+.wl:hover .wl-go {
+  transform: translateX(4px);
+}
+.wl-hint {
+  display: block;
+  margin-top: 10px;
+  color: var(--faint);
+}
+@keyframes cta-pulse {
+  0% {
+    box-shadow: 0 0 0 0 color-mix(in oklab, var(--pc) 55%, transparent);
+  }
+  70%,
+  100% {
+    box-shadow: 0 0 0 14px transparent;
+  }
+}
+html.over-screen,
+html.over-screen body {
+  cursor: pointer;
 }
 
 /* tags pinned to the frame */
@@ -539,11 +577,13 @@ a {
   pointer-events: none !important;
 }
 
-/* project pop-up */
+/* project case study */
 .work-modal {
-  width: min(880px, calc(100vw - 32px));
+  width: min(1040px, calc(100vw - 32px));
   max-height: calc(100dvh - 32px);
-  padding: clamp(18px, 2.6vw, 30px);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: clamp(18px, 2.8vw, 36px);
   border: 1px solid var(--hair);
   border-radius: 18px;
   background: rgb(18 12 14 / 0.72);
@@ -600,19 +640,123 @@ a {
   background: linear-gradient(135deg, var(--pc), color-mix(in oklab, var(--pc) 25%, #000));
   color: rgb(255 255 255 / 0.75);
 }
+.wm-shot {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
 .wm-stage img {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  object-position: top;
+  transition: transform 0.6s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+a.wm-shot:hover img {
+  transform: scale(1.02);
+}
+.wm-live {
+  margin-top: 16px;
+}
+.wm-visit {
+  display: inline-flex;
+  padding: 11px 18px;
+  border-radius: 99px;
+  background: var(--pc);
+  color: #0a0606;
+  font-size: 0.86rem;
+  font-weight: 600;
+}
+.wm-cols {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr;
+  gap: clamp(20px, 4vw, 48px);
+  margin-top: 26px;
+}
+.wm-body {
+  display: grid;
+  gap: 22px;
+}
+.wm-body h4,
+.wm-meta dt {
+  margin-bottom: 8px;
+  color: var(--pc);
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.wm-body p,
+.wm-body li {
+  color: var(--soft);
+  line-height: 1.55;
+}
+.wm-body ul {
+  display: grid;
+  gap: 8px;
+  padding-left: 1.1em;
+}
+.wm-body li::marker {
+  color: var(--pc);
 }
 .wm-meta {
   display: grid;
-  grid-template-columns: auto 1fr;
-  gap: 6px 20px;
-  margin-top: 18px;
+  align-content: start;
+  gap: 4px;
 }
-.wm-meta dt {
+.wm-meta dd {
+  margin-bottom: 14px;
+  line-height: 1.45;
+}
+.wm-meta dd a {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.wm-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.wm-chips span {
+  padding: 5px 10px;
+  border: 1px solid var(--hair);
+  border-radius: 99px;
+  font-size: 0.72rem;
+}
+.wm-nav {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-top: 28px;
+  padding-top: 20px;
+  border-top: 1px solid var(--hair);
+}
+.wm-nav button {
+  display: grid;
+  gap: 4px;
+  padding: 12px 14px;
+  border: 1px solid var(--hair);
+  border-radius: 12px;
+  text-align: left;
+  transition: border-color 0.3s ease;
+}
+.wm-nav button:last-child {
+  text-align: right;
+}
+.wm-nav button:hover {
+  border-color: var(--pc);
+}
+.wm-nav span {
   color: var(--faint);
+  font-size: 0.72rem;
+}
+.wm-nav b {
+  font-weight: 400;
+}
+@media (max-width: 700px) {
+  .wm-cols {
+    grid-template-columns: 1fr;
+  }
 }
 
 /* loader */
@@ -709,6 +853,26 @@ a {
 #cursor.hot .c-ring {
   width: 46px;
   height: 46px;
+}
+.c-label {
+  position: absolute;
+  translate: -50% -50%;
+  color: #fff;
+  font-size: 0.68rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  opacity: 0;
+  transition: opacity 0.25s ease;
+}
+#cursor.view .c-ring {
+  width: 74px;
+  height: 74px;
+}
+#cursor.view .c-dot {
+  opacity: 0;
+}
+#cursor.view .c-label {
+  opacity: 1;
 }
 
 @media (max-width: 800px) {

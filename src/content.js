@@ -99,6 +99,7 @@ export const footer = {
 // screenshot in public/media/projects/. The screens space themselves out automatically.
 // Take a screenshot with:  npm run shot -- <url> <file-name> [Enter | "text of an intro button"]
 // `image` is the screenshot; without one the screen shows a placeholder in the project colour.
+// `study` is the case study that opens when someone clicks the screen or the button: the brief, what was built, the result.
 export const projects = [
   {
     name: 'DL Origin',
@@ -108,6 +109,15 @@ export const projects = [
     role: 'Co-founder: design, build and run the business',
     stack: 'Next.js, React, TypeScript, Tailwind CSS, GSAP, Lenis',
     href: 'https://www.dlorigin.com/',
+    study: {
+      brief: "Launch our own web agency, with a site that sells websites, hosting, domains and business email as one simple offer: one team and one bill.",
+      built: [
+        "A brand-led home page with clear starting prices: websites from $300, hosting from $3 a month.",
+        "Smooth scrolling with Lenis and GSAP motion that carries you through every service.",
+        "A Next.js and TypeScript build, styled with Tailwind CSS, kept fast and easy to find in search.",
+      ],
+      result: "The live home of DL Origin, and the first place new clients meet the business.",
+    },
     image: '/media/projects/dl-origin.jpg',
   },
   {
@@ -118,6 +128,15 @@ export const projects = [
     role: 'Front-end build with an interactive 3D product hero and smooth scroll',
     stack: 'Next.js, React, Three.js, React Three Fiber, GSAP, Lenis',
     href: 'https://southernhunterssite.vercel.app/',
+    study: {
+      brief: "A Zimbabwean maker of collapsible aluminium tubes and rigid containers needed a site that makes an industrial product feel premium.",
+      built: [
+        "An interactive 3D tube as the hero, built with Three.js and React Three Fiber, that you can look around.",
+        "Scroll-led storytelling with GSAP and Lenis, so the product reveals itself section by section.",
+        "Clear sections for the tube and container ranges, built in Next.js and React.",
+      ],
+      result: "Buyers can see and turn the product before they ever hold one.",
+    },
     image: '/media/projects/southern-hunters.jpg',
   },
   {
@@ -128,6 +147,15 @@ export const projects = [
     role: 'Design and development',
     stack: 'HTML, CSS, JavaScript',
     href: 'https://taydylan-portfolio.vercel.app/',
+    study: {
+      brief: "A UI/UX designer wanted a portfolio that feels like their own work, not a template.",
+      built: [
+        "A layout built around African pattern artwork.",
+        "A bold black and copper look carried through type, colour and detail.",
+        "Hand-written HTML, CSS and JavaScript with no framework, so it stays light and quick.",
+      ],
+      result: "A portfolio as distinctive as the designer behind it.",
+    },
     image: '/media/projects/tay-dylan.jpg',
   },
   {
@@ -138,6 +166,15 @@ export const projects = [
     role: 'Design, 3D and front-end build',
     stack: 'React, Three.js, React Three Fiber, GSAP, Framer Motion, Tailwind CSS',
     href: 'https://www.lyle-portfolio.dev/',
+    study: {
+      brief: "My main portfolio had to show what I can do with WebGL, not just list it.",
+      built: [
+        "A press-start intro screen that sets the tone before the site opens.",
+        "Interactive 3D scenes built with Three.js and React Three Fiber.",
+        "Motion with GSAP and Framer Motion, styled with Tailwind CSS.",
+      ],
+      result: "The home of my work, with every project and how to reach me.",
+    },
     image: '/media/projects/lyle-portfolio.jpg',
   },
   {
@@ -148,6 +185,15 @@ export const projects = [
     role: 'Storefront design and build',
     stack: 'Node.js, Express, HTML, CSS, JavaScript',
     href: 'https://pinnacle.indigoprints.co.zw/',
+    study: {
+      brief: "Pinnacle needed a standalone online store for its welding machines, consumables and safety gear.",
+      built: [
+        "A product catalogue priced in US dollars, with delivery across Zimbabwe.",
+        "A Node.js and Express server behind plain HTML, CSS and JavaScript pages.",
+        "Product pages laid out so buyers can compare machines and gear quickly.",
+      ],
+      result: "Pinnacle's range is online and can be ordered from anywhere in the country.",
+    },
     image: '/media/projects/pinnacle-welding.jpg',
   },
   {
@@ -158,6 +204,15 @@ export const projects = [
     role: 'Design and front-end build, with live data from PokéAPI',
     stack: 'React, TypeScript, Tailwind CSS, React Router, Axios',
     href: 'https://pok-dex-gilt.vercel.app/',
+    study: {
+      brief: "A personal project: a fast, friendly Pokédex that stays current without hand-entering data.",
+      built: [
+        "1000+ Pokémon with stats, abilities, evolution chains and types, pulled live from PokéAPI with Axios.",
+        "Search, plus favourites you can come back to.",
+        "React and TypeScript, with React Router for the pages and Tailwind CSS for the look.",
+      ],
+      result: "Every Pokémon is a search away, and the data stays current on its own.",
+    },
     image: '/media/projects/pok-dex.jpg',
   },
   {
@@ -168,6 +223,15 @@ export const projects = [
     role: 'Design and build of two storefronts from one codebase',
     stack: 'Astro, TypeScript, JavaScript, Python',
     href: 'https://firstaidkits.co.zw/',
+    study: {
+      brief: "One safety-supplies business selling in two countries, Zimbabwe and Zambia, each in its own currency.",
+      built: [
+        "Two storefronts for first aid kits, fire extinguishers and safety supplies, built from one shared codebase.",
+        "Prices in US dollars for Zimbabwe and in Zambian kwacha for Zambia.",
+        "Fast, mostly static pages built with Astro and TypeScript.",
+      ],
+      result: "Both shops run from the same code, so a change made once goes live in both countries.",
+    },
     image: '/media/projects/first-aid-kits.jpg',
   },
   {
@@ -178,6 +242,15 @@ export const projects = [
     role: 'Design and front-end build',
     stack: 'Next.js, React',
     href: 'https://www.freepsdmockups.org/',
+    study: {
+      brief: "Build a free library of design mockups that people can actually find and use.",
+      built: [
+        "10,000+ PSD mockups across packaging, devices, apparel and branding.",
+        "No registration and no watermarks, with commercial use included.",
+        "A Next.js and React build, with pages made to be found in search.",
+      ],
+      result: "Designers get print-ready mockups in a couple of clicks, free.",
+    },
     image: '/media/projects/free-psd-mockups.jpg',
   },
 ];

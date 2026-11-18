@@ -91,11 +91,19 @@
           <p class="mono wm-tag" id="wm-tag"></p>
           <h3 class="wm-title" id="wm-title"></h3>
           <p class="wm-desc" id="wm-desc"></p>
+          <div class="wm-live" id="wm-live"></div>
         </div>
-        <button class="wm-close" id="wm-close" aria-label="Close">✕</button>
+        <button class="wm-close" id="wm-close" aria-label="Close the case study">✕</button>
       </header>
       <div class="wm-stage" id="wm-stage"></div>
-      <dl class="wm-meta mono" id="wm-meta"></dl>
+      <div class="wm-cols">
+        <div class="wm-body" id="wm-body"></div>
+        <dl class="wm-meta" id="wm-meta"></dl>
+      </div>
+      <nav class="wm-nav" aria-label="Other projects">
+        <button id="wm-prev"><span class="mono">← Previous</span><b id="wm-prev-name"></b></button>
+        <button id="wm-next"><span class="mono">Next →</span><b id="wm-next-name"></b></button>
+      </nav>
     </dialog>
 
     <div id="loader">
@@ -110,6 +118,6 @@
       </div>
     </div>
 
-    <div id="cursor" aria-hidden="true"><i class="c-dot"></i><i class="c-ring"></i></div>
+    <div id="cursor" aria-hidden="true"><i class="c-dot"></i><i class="c-ring"></i><span class="c-label mono">View</span></div>
   </body>
 </html>

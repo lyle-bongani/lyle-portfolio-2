@@ -113,7 +113,9 @@ function build() {
     b.style.setProperty('--pc', pr.color);
     const row = el('span', 'wl-row mono');
     row.append(el('span', 'wl-num', pad(i + 1)), el('span', 'wl-rule'), el('span', 'wl-tag', pr.tag));
-    b.append(row, el('span', 'wl-name', pr.name), el('span', 'wl-cta mono', 'View work ↗'));
+    const cta = el('span', 'wl-cta');
+    cta.append(el('span', '', 'Open case study'), el('span', 'wl-go', '→'));
+    b.append(row, el('span', 'wl-name', pr.name), cta, el('span', 'wl-hint mono', 'or click the screen'));
     b.addEventListener('click', () => openWork(i));
     ui.work.append(b);
     return b;
@@ -144,30 +146,88 @@ function build() {
   });
 }
 
-// project pop-up
+// project case study
 const modal = $('work-modal');
+let openIndex = -1;
+function liveLink(pr, cls, text) {
+  return Object.assign(el('a', cls, text), { href: pr.href, target: '_blank', rel: 'noopener' });
+}
 function openWork(i) {
+  i = (i + projects.length) % projects.length;
+  openIndex = i;
   const pr = projects[i];
+  const st = pr.study ?? {};
   modal.style.setProperty('--pc', pr.color);
-  $('wm-tag').textContent = `${pad(i + 1)} · ${pr.tag}`;
+  $('wm-tag').textContent = `Case study ${pad(i + 1)} / ${pad(projects.length)} · ${pr.tag}`;
   $('wm-title').textContent = pr.name;
   $('wm-desc').textContent = pr.blurb;
+  $('wm-live').replaceChildren(...(pr.href ? [liveLink(pr, 'wm-visit', 'Visit the live site ↗')] : []));
+
   const stage = $('wm-stage');
   stage.replaceChildren();
-  if (pr.image) stage.append(Object.assign(new Image(), { src: pr.image, alt: pr.name }));
-  else stage.append(el('p', 'mono', 'Project media goes here'));
-  const meta = $('wm-meta');
-  meta.replaceChildren(el('dt', '', 'Role'), el('dd', '', pr.role), el('dt', '', 'Stack'), el('dd', '', pr.stack ?? ''));
-  if (pr.href) {
-    const link = Object.assign(el('a', '', 'Visit the live site ↗'), { href: pr.href, target: '_blank', rel: 'noopener' });
-    const dd = el('dd');
-    dd.append(link);
-    meta.append(el('dt', '', 'Link'), dd);
+  if (pr.image) {
+    const shot = pr.href ? liveLink(pr, 'wm-shot', '') : el('div', 'wm-shot');
+    shot.setAttribute('aria-label', `Open ${pr.name} in a new tab`);
+    shot.append(Object.assign(new Image(), { src: pr.image, alt: `${pr.name} home page` }));
+    stage.append(shot);
+  } else stage.append(el('p', 'mono', 'Project media goes here'));
+
+  const body = $('wm-body');
+  body.replaceChildren();
+  if (st.brief) {
+    const s = el('section');
+    s.append(el('h4', 'mono', 'The brief'), el('p', '', st.brief));
+    body.append(s);
   }
-  modal.showModal();
+  if (st.built?.length) {
+    const s = el('section');
+    const ul = el('ul');
+    ul.append(...st.built.map((t) => el('li', '', t)));
+    s.append(el('h4', 'mono', 'What I built'), ul);
+    body.append(s);
+  }
+  if (st.result) {
+    const s = el('section');
+    s.append(el('h4', 'mono', 'The result'), el('p', '', st.result));
+    body.append(s);
+  }
+
+  const meta = $('wm-meta');
+  const chips = el('dd', 'wm-chips');
+  chips.append(...(pr.stack ?? '').split(',').map((t) => el('span', 'mono', t.trim())).filter((c) => c.textContent));
+  meta.replaceChildren(el('dt', 'mono', 'Role'), el('dd', '', pr.role), el('dt', 'mono', 'Stack'), chips);
+  if (pr.href) {
+    const dd = el('dd');
+    dd.append(liveLink(pr, '', pr.href.replace(/^https?:\/\/(www\.)?/, '').replace(/\/$/, '') + ' ↗'));
+    meta.append(el('dt', 'mono', 'Live'), dd);
+  }
+
+  $('wm-prev-name').textContent = projects[(i - 1 + projects.length) % projects.length].name;
+  $('wm-next-name').textContent = projects[(i + 1) % projects.length].name;
+  if (!modal.open) modal.showModal();
+  modal.scrollTop = 0;
 }
 $('wm-close').addEventListener('click', () => modal.close());
+$('wm-prev').addEventListener('click', () => openWork(openIndex - 1));
+$('wm-next').addEventListener('click', () => openWork(openIndex + 1));
 modal.addEventListener('click', (e) => e.target === modal && modal.close());
+modal.addEventListener('keydown', (e) => {
+  if (e.key === 'ArrowRight') openWork(openIndex + 1);
+  if (e.key === 'ArrowLeft') openWork(openIndex - 1);
+});
+
+// the screens around Saturn are clickable too
+const overUI = (t) => !!t?.closest?.('a, button, dialog, #loader, .footer.on');
+let screenUnder = -1;
+function screenAt(clientX, clientY) {
+  if (shownProject < 0) return -1; // only while the projects are on show
+  return world.pick((clientX / innerWidth) * 2 - 1, (clientY / innerHeight) * 2 - 1);
+}
+addEventListener('click', (e) => {
+  if (modal.open || overUI(e.target)) return;
+  const i = screenAt(e.clientX, e.clientY);
+  if (i >= 0) openWork(i);
+});
 
 // chapter words: fade out, change, fade in
 let shownChapter = -1;
@@ -243,6 +303,9 @@ addEventListener('pointermove', (e) => {
   pointer.x = (e.clientX / innerWidth) * 2 - 1;
   pointer.y = (e.clientY / innerHeight) * 2 - 1;
   cursor.style.transform = `translate3d(${e.clientX}px, ${e.clientY}px, 0)`;
+  pointer.cx = e.clientX;
+  pointer.cy = e.clientY;
+  pointer.target = e.target;
   const hot = !!e.target.closest?.('a, button');
   if (hot !== cursorHot) cursor.classList.toggle('hot', (cursorHot = hot));
   const mouse = e.pointerType === 'mouse';
@@ -288,6 +351,14 @@ function frame() {
   ui.footer.inert = !atEnd;
   const workChapter = chapters.find((c) => c.work);
   showProject(inRange(workChapter?.work) ? world.state.project : -1);
+  // hovering a project screen: it lights up, and the cursor says what a click does
+  const under = !modal.open && pointer.target && !overUI(pointer.target) ? screenAt(pointer.cx, pointer.cy) : -1;
+  if (under !== screenUnder) {
+    screenUnder = under;
+    world.highlight(under);
+    cursor.classList.toggle('view', under >= 0);
+    root.classList.toggle('over-screen', under >= 0);
+  }
   $('rail-fill').style.transform = `scaleY(${p})`;
   $('rail-now').style.top = `${p * 100}%`;
 
