@@ -8,7 +8,8 @@ export const site = {
   email: 'lylechadya139@gmail.com',
   music: '/audio/track.mp3', // put the file in public/audio. Empty = built-in synth drone
   year: 2026,
-  status: { text: 'Open to', link: 'new projects', href: 'mailto:lylechadya139@gmail.com' },
+  status: { text: 'Co-founder of', link: 'DL Origin', href: 'https://www.dlorigin.com/' },
+  also: { text: 'Part of', link: 'Uncommon.org', href: 'https://uncommon.org/' },
   links: [
     { label: 'GitHub', href: 'https://github.com/lyle-bongani' },
     { label: 'LinkedIn', href: 'https://www.linkedin.com/in/lyle-chadya-368930358/' },
@@ -69,8 +70,8 @@ export const chapters = [
     title: 'Shipped',
     line: 'Sites taken from first idea to live launch: designed, built and shipped.',
     stats: [
-      { value: 'React', label: 'Next.js, TypeScript and Three.js on every build' },
-      { value: 'WebGL', label: 'Real-time 3D that runs right in the browser' },
+      { value: '2 yrs', label: 'Building websites and web apps' },
+      { value: 'Co-founder', label: 'DL Origin: websites, hosting and domains from Harare' },
     ],
   },
   {
@@ -99,6 +100,16 @@ export const footer = {
 // Take a screenshot with:  npm run shot -- <url> <file-name> [Enter | "text of an intro button"]
 // `image` is the screenshot; without one the screen shows a placeholder in the project colour.
 export const projects = [
+  {
+    name: 'DL Origin',
+    tag: 'Web agency · Co-founded',
+    color: '#ff7a00',
+    blurb: 'Websites, hosting, domains and business email from Harare, with one team and one bill. Websites from $300, hosting from $3 a month.',
+    role: 'Co-founder: design, build and run the business',
+    stack: 'Next.js, React, TypeScript, Tailwind CSS, GSAP, Lenis',
+    href: 'https://www.dlorigin.com/',
+    image: '/media/projects/dl-origin.jpg',
+  },
   {
     name: 'Southern Hunters',
     tag: 'Manufacturing · 3D site',

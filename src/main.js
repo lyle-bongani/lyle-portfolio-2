@@ -93,6 +93,10 @@ function build() {
   $('status-text').textContent = site.status.text;
   $('status-link').textContent = site.status.link;
   $('status-link').href = site.status.href;
+  if (site.also) {
+    const a = Object.assign(el('a', '', site.also.link), { href: site.also.href, target: '_blank', rel: 'noopener' });
+    $('status-also').replaceChildren(' · ' + site.also.text + ' ', a);
+  }
 
   indexItems = chapters.map((c, i) => {
     const li = el('li');
