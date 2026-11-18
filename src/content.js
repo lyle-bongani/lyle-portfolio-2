@@ -139,4 +139,14 @@ export const projects = [
     href: 'https://pinnacle.indigoprints.co.zw/',
     image: '/media/projects/pinnacle-welding.jpg',
   },
+  {
+    name: 'PokéDex',
+    tag: 'Web app · Live data',
+    color: '#ffcb05',
+    blurb: 'An interactive Pokédex covering 1000+ Pokémon, with stats, abilities, evolution chains and types, fed live by PokéAPI. Search and favourites included.',
+    role: 'Design and front-end build, with live data from PokéAPI',
+    stack: 'React, TypeScript, Tailwind CSS, React Router, Axios',
+    href: 'https://pok-dex-gilt.vercel.app/',
+    image: '/media/projects/pok-dex.jpg',
+  },
 ];

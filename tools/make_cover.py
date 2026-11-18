@@ -10,12 +10,16 @@ earth, saturn, galaxy = sys.argv[1:4]
 FONTS = "C:/Windows/Fonts/"
 
 
-def load_clean(path):
+def load_clean(path, clone=False):
     """A browser screenshot, with the screenshot tool's mouse pointer and corner button painted out."""
     img = cv2.imread(path)
     mask = np.zeros(img.shape[:2], np.uint8)
     mask[272:312, 628:668] = 255          # mouse pointer sits in the middle of every capture
     mask[446:490, 1234:1276] = 255        # extension button, bottom right
+    if clone:  # copy a patch of real starfield from the left, blended in, instead of a blur fill
+        patch = img[262:322, 556:616].copy()
+        img = cv2.seamlessClone(patch, img, np.full(patch.shape[:2], 255, np.uint8), (648, 292), cv2.NORMAL_CLONE)
+        mask[272:312, 628:668] = 0
     img = cv2.inpaint(img, mask, 6, cv2.INPAINT_TELEA)
     return Image.fromarray(cv2.cvtColor(img, cv2.COLOR_BGR2RGB))
 
@@ -70,3 +74,32 @@ url = "2.lyle-portfolio.dev"
 
 compose(load_clean(saturn), 1200, 627, 0.62, "public/og-image.jpg", title, kicker, sub, url)          # link preview (LinkedIn, X, chat apps)
 compose(load_clean(saturn), 1280, 720, 0.62, "linkedin/cover-1280x720.jpg", title, kicker, sub, url)       # article cover, 16:9
+
+
+def compose_galaxy(bg, W, H, out, focus=0.88):
+    """Cover where the picture is the star: the hero looking out over the Milky Way, with the words small and high up."""
+    base = cover(bg, W, H, focus).convert("RGB")
+    grad = np.linspace(0, 1, W, dtype=np.float32)
+    yy = np.linspace(0, 1, H, dtype=np.float32)
+    # only the top-left corner gets darkened, where the words sit; the galaxy is left alone
+    shade = np.clip(1 - (grad[None, :] / 0.55) ** 1.4, 0, 1) * np.clip(1 - (yy[:, None] / 0.62) ** 1.3, 0, 1) * 0.82
+    a = np.asarray(base).astype(np.float32) * (1 - shade[..., None])
+    base = Image.fromarray(a.astype(np.uint8))
+    d = ImageDraw.Draw(base)
+    u = H / 627
+    x, y = round(64 * u), round(58 * u)
+    red = (255, 84, 64)
+    d.line([(x, y + 14 * u), (x + 58 * u, y + 14 * u)], fill=red, width=max(2, round(3 * u)))
+    d.text((x + 76 * u, y), "LYLE CHADYA", font=font("seguisb.ttf", round(21 * u)), fill=(236, 232, 226))
+    f = font("segoeuisl.ttf", round(50 * u))
+    ty = y + 58 * u
+    for line in ("A portfolio that", "crosses the solar system"):
+        d.text((x, ty), line, font=f, fill=(248, 245, 240))
+        ty += 60 * u
+    d.text((x, ty + 14 * u), "Scroll-driven 3D, built with Three.js and Blender", font=font("segoeuil.ttf", round(22 * u)), fill=(214, 208, 202))
+    d.text((x, H - 66 * u), "2.lyle-portfolio.dev", font=font("seguisb.ttf", round(25 * u)), fill=(255, 255, 255))
+    base.save(out, quality=93, subsampling=0)
+    print("saved", out, base.size)
+
+
+compose_galaxy(load_clean(galaxy, clone=True), 1280, 720, "linkedin/cover-galaxy-1280x720.jpg")
