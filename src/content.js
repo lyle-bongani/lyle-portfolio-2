@@ -99,6 +99,7 @@ export const footer = {
 // screenshot in public/media/projects/. The screens space themselves out automatically.
 // Take a screenshot with:  npm run shot -- <url> <file-name> [Enter | "text of an intro button"]
 // `image` is the screenshot; without one the screen shows a placeholder in the project colour.
+// `facts` are the big numbers in the case study's colour band (keep them true).
 // `study` is the case study that opens when someone clicks the screen or the button: the brief, what was built, the result.
 export const projects = [
   {
@@ -109,6 +110,11 @@ export const projects = [
     role: 'Co-founder: design, build and run the business',
     stack: 'Next.js, React, TypeScript, Tailwind CSS, GSAP, Lenis',
     href: 'https://www.dlorigin.com/',
+    facts: [
+      { value: "$300", label: "Websites from" },
+      { value: "$3/mo", label: "Hosting from" },
+      { value: "1 bill", label: "Site, hosting, domain and email together" },
+    ],
     study: {
       brief: "Launch our own web agency, with a site that sells websites, hosting, domains and business email as one simple offer: one team and one bill.",
       built: [
@@ -128,6 +134,10 @@ export const projects = [
     role: 'Front-end build with an interactive 3D product hero and smooth scroll',
     stack: 'Next.js, React, Three.js, React Three Fiber, GSAP, Lenis',
     href: 'https://southernhunterssite.vercel.app/',
+    facts: [
+      { value: "3D", label: "Interactive product hero" },
+      { value: "2", label: "Product ranges: tubes and containers" },
+    ],
     study: {
       brief: "A Zimbabwean maker of collapsible aluminium tubes and rigid containers needed a site that makes an industrial product feel premium.",
       built: [
@@ -147,6 +157,10 @@ export const projects = [
     role: 'Design and development',
     stack: 'HTML, CSS, JavaScript',
     href: 'https://taydylan-portfolio.vercel.app/',
+    facts: [
+      { value: "0", label: "Frameworks: hand-written HTML, CSS and JS" },
+      { value: "3", label: "Featured projects: app, packaging, branding" },
+    ],
     study: {
       brief: "A UI/UX designer wanted a portfolio that feels like their own work, not a template.",
       built: [
@@ -166,6 +180,10 @@ export const projects = [
     role: 'Design, 3D and front-end build',
     stack: 'React, Three.js, React Three Fiber, GSAP, Framer Motion, Tailwind CSS',
     href: 'https://www.lyle-portfolio.dev/',
+    facts: [
+      { value: "WebGL", label: "Interactive 3D scenes" },
+      { value: "14", label: "Projects on show" },
+    ],
     study: {
       brief: "My main portfolio had to show what I can do with WebGL, not just list it.",
       built: [
@@ -185,6 +203,10 @@ export const projects = [
     role: 'Storefront design and build',
     stack: 'Node.js, Express, HTML, CSS, JavaScript',
     href: 'https://pinnacle.indigoprints.co.zw/',
+    facts: [
+      { value: "USD", label: "Prices in US dollars" },
+      { value: "Nationwide", label: "Delivery across Zimbabwe" },
+    ],
     study: {
       brief: "Pinnacle needed a standalone online store for its welding machines, consumables and safety gear.",
       built: [
@@ -204,6 +226,10 @@ export const projects = [
     role: 'Design and front-end build, with live data from PokéAPI',
     stack: 'React, TypeScript, Tailwind CSS, React Router, Axios',
     href: 'https://pok-dex-gilt.vercel.app/',
+    facts: [
+      { value: "1000+", label: "Pokémon to explore" },
+      { value: "Live", label: "Data straight from PokéAPI" },
+    ],
     study: {
       brief: "A personal project: a fast, friendly Pokédex that stays current without hand-entering data.",
       built: [
@@ -223,6 +249,11 @@ export const projects = [
     role: 'Design and build of two storefronts from one codebase',
     stack: 'Astro, TypeScript, JavaScript, Python',
     href: 'https://firstaidkits.co.zw/',
+    facts: [
+      { value: "2", label: "Countries: Zimbabwe and Zambia" },
+      { value: "1", label: "Shared codebase" },
+      { value: "2", label: "Currencies: USD and ZMW" },
+    ],
     study: {
       brief: "One safety-supplies business selling in two countries, Zimbabwe and Zambia, each in its own currency.",
       built: [
@@ -242,6 +273,10 @@ export const projects = [
     role: 'Design and front-end build',
     stack: 'Next.js, React',
     href: 'https://www.freepsdmockups.org/',
+    facts: [
+      { value: "10,000+", label: "Free mockups" },
+      { value: "0", label: "Sign-ups or watermarks" },
+    ],
     study: {
       brief: "Build a free library of design mockups that people can actually find and use.",
       built: [

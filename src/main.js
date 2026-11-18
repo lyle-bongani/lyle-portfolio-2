@@ -116,7 +116,7 @@ function build() {
     const cta = el('span', 'wl-cta');
     cta.append(el('span', '', 'Open case study'), el('span', 'wl-go', '→'));
     b.append(row, el('span', 'wl-name', pr.name), cta, el('span', 'wl-hint mono', 'or click the screen'));
-    b.addEventListener('click', () => openWork(i));
+    b.addEventListener('click', (e) => openWork(i, e.detail ? { x: e.clientX, y: e.clientY } : null));
     ui.work.append(b);
     return b;
   });
@@ -146,74 +146,127 @@ function build() {
   });
 }
 
-// project case study
+// project case study: a full page over the trip, opened from wherever you clicked
 const modal = $('work-modal');
+const csScroll = $('cs-scroll');
 let openIndex = -1;
+const wrap = (i) => (i + projects.length) % projects.length;
+const domain = (href) => href.replace(/^https?:\/\/(www\.)?/, '').replace(/\/$/, '');
 function liveLink(pr, cls, text) {
   return Object.assign(el('a', cls, text), { href: pr.href, target: '_blank', rel: 'noopener' });
 }
-function openWork(i) {
-  i = (i + projects.length) % projects.length;
+// dark text on light project colours, light text on dark ones
+function inkFor(hex) {
+  const n = parseInt(hex.slice(1), 16);
+  const [r, g, b] = [n >> 16, (n >> 8) & 255, n & 255].map((c) => {
+    c /= 255;
+    return c <= 0.03928 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4;
+  });
+  return 0.2126 * r + 0.7152 * g + 0.0722 * b > 0.22 ? '#0b0809' : '#fff';
+}
+function fillWork(i) {
+  i = wrap(i);
   openIndex = i;
   const pr = projects[i];
   const st = pr.study ?? {};
   modal.style.setProperty('--pc', pr.color);
-  $('wm-tag').textContent = `Case study ${pad(i + 1)} / ${pad(projects.length)} · ${pr.tag}`;
-  $('wm-title').textContent = pr.name;
+  modal.style.setProperty('--pc-ink', inkFor(pr.color));
+  $('wm-count').textContent = `${pad(i + 1)} / ${pad(projects.length)}`;
+  $('wm-tag').textContent = pr.tag;
+  $('wm-num').textContent = `Case study ${pad(i + 1)}`;
+  $('wm-name').textContent = pr.name;
   $('wm-desc').textContent = pr.blurb;
-  $('wm-live').replaceChildren(...(pr.href ? [liveLink(pr, 'wm-visit', 'Visit the live site ↗')] : []));
+  $('wm-live').replaceChildren(...(pr.href ? [liveLink(pr, 'cs-visit', 'Visit the live site ↗')] : []));
 
+  const meta = [['Type', pr.tag], ['Role', pr.role], ['Built with', pr.stack], ['Live', pr.href ? domain(pr.href) : '']];
+  $('wm-meta').replaceChildren(
+    ...meta.filter((m) => m[1]).map(([k, v]) => {
+      const d = el('div');
+      d.append(el('dt', 'mono', k), el('dd', '', v));
+      return d;
+    }),
+  );
+
+  // the screenshot sits in a browser window, and opens the live site
   const stage = $('wm-stage');
   stage.replaceChildren();
-  if (pr.image) {
-    const shot = pr.href ? liveLink(pr, 'wm-shot', '') : el('div', 'wm-shot');
-    shot.setAttribute('aria-label', `Open ${pr.name} in a new tab`);
-    shot.append(Object.assign(new Image(), { src: pr.image, alt: `${pr.name} home page` }));
-    stage.append(shot);
-  } else stage.append(el('p', 'mono', 'Project media goes here'));
+  const win = pr.href ? liveLink(pr, 'cs-win', '') : el('div', 'cs-win');
+  const chrome = el('span', 'cs-chrome');
+  chrome.append(el('i'), el('i'), el('i'), el('span', 'cs-url mono', pr.href ? domain(pr.href) : pr.name));
+  win.append(chrome);
+  if (pr.image) win.append(Object.assign(new Image(), { src: pr.image, alt: `${pr.name} home page`, decoding: 'async' }));
+  if (pr.href) win.setAttribute('aria-label', `Open ${pr.name} in a new tab`);
+  stage.append(win);
 
-  const body = $('wm-body');
-  body.replaceChildren();
-  if (st.brief) {
-    const s = el('section');
-    s.append(el('h4', 'mono', 'The brief'), el('p', '', st.brief));
-    body.append(s);
-  }
-  if (st.built?.length) {
-    const s = el('section');
-    const ul = el('ul');
-    ul.append(...st.built.map((t) => el('li', '', t)));
-    s.append(el('h4', 'mono', 'What I built'), ul);
-    body.append(s);
-  }
-  if (st.result) {
-    const s = el('section');
-    s.append(el('h4', 'mono', 'The result'), el('p', '', st.result));
-    body.append(s);
-  }
+  $('wm-brief').textContent = st.brief ?? pr.blurb;
+  $('wm-facts').replaceChildren(
+    ...(pr.facts ?? []).map((f) => {
+      const d = el('div');
+      d.append(el('dt', '', f.value), el('dd', 'mono', f.label));
+      return d;
+    }),
+  );
+  $('wm-built').replaceChildren(
+    ...(st.built ?? []).map((t, k) => {
+      const li = el('li');
+      li.append(el('span', 'mono', pad(k + 1)), el('p', '', t));
+      return li;
+    }),
+  );
+  $('wm-result').textContent = st.result ?? '';
+  $('wm-result').parentElement.hidden = !st.result;
 
-  const meta = $('wm-meta');
-  const chips = el('dd', 'wm-chips');
-  chips.append(...(pr.stack ?? '').split(',').map((t) => el('span', 'mono', t.trim())).filter((c) => c.textContent));
-  meta.replaceChildren(el('dt', 'mono', 'Role'), el('dd', '', pr.role), el('dt', 'mono', 'Stack'), chips);
-  if (pr.href) {
-    const dd = el('dd');
-    dd.append(liveLink(pr, '', pr.href.replace(/^https?:\/\/(www\.)?/, '').replace(/\/$/, '') + ' ↗'));
-    meta.append(el('dt', 'mono', 'Live'), dd);
-  }
-
-  $('wm-prev-name').textContent = projects[(i - 1 + projects.length) % projects.length].name;
-  $('wm-next-name').textContent = projects[(i + 1) % projects.length].name;
-  if (!modal.open) modal.showModal();
-  modal.scrollTop = 0;
+  const nx = projects[wrap(i + 1)];
+  $('wm-next-name').textContent = nx.name;
+  $('wm-next-tag').textContent = nx.tag;
+  $('wm-next-card').style.setProperty('--nc', nx.color);
+  $('wm-next-img').style.backgroundImage = nx.image ? `url("${nx.image}")` : '';
+  csScroll.scrollTop = 0;
 }
-$('wm-close').addEventListener('click', () => modal.close());
-$('wm-prev').addEventListener('click', () => openWork(openIndex - 1));
-$('wm-next').addEventListener('click', () => openWork(openIndex + 1));
-modal.addEventListener('click', (e) => e.target === modal && modal.close());
+function openWork(i, from) {
+  fillWork(i);
+  const x = from?.x ?? innerWidth / 2, y = from?.y ?? innerHeight / 2;
+  modal.style.setProperty('--ox', `${x}px`);
+  modal.style.setProperty('--oy', `${y}px`);
+  if (!modal.open) {
+    modal.classList.remove('closing');
+    modal.showModal();
+    $('wm-close').focus({ preventScroll: true });
+  }
+}
+// switching project inside the page: a quick fade instead of re-opening
+function switchWork(i) {
+  if (reduced) return fillWork(i);
+  csScroll.classList.add('swap');
+  setTimeout(() => {
+    fillWork(i);
+    csScroll.classList.remove('swap');
+  }, 220);
+}
+function closeWork() {
+  if (!modal.open || modal.classList.contains('closing')) return;
+  if (reduced) return modal.close();
+  modal.classList.add('closing');
+  setTimeout(() => {
+    modal.close();
+    modal.classList.remove('closing');
+  }, 480);
+}
+$('wm-close').addEventListener('click', closeWork);
+$('wm-prev').addEventListener('click', () => switchWork(openIndex - 1));
+$('wm-next').addEventListener('click', () => switchWork(openIndex + 1));
+$('wm-next-card').addEventListener('click', (e) => {
+  e.preventDefault();
+  switchWork(openIndex + 1);
+});
+$('wm-next-card').href = '#';
+modal.addEventListener('cancel', (e) => {
+  e.preventDefault(); // Esc: play the closing animation first
+  closeWork();
+});
 modal.addEventListener('keydown', (e) => {
-  if (e.key === 'ArrowRight') openWork(openIndex + 1);
-  if (e.key === 'ArrowLeft') openWork(openIndex - 1);
+  if (e.key === 'ArrowRight') switchWork(openIndex + 1);
+  if (e.key === 'ArrowLeft') switchWork(openIndex - 1);
 });
 
 // the screens around Saturn are clickable too
@@ -226,7 +279,7 @@ function screenAt(clientX, clientY) {
 addEventListener('click', (e) => {
   if (modal.open || overUI(e.target)) return;
   const i = screenAt(e.clientX, e.clientY);
-  if (i >= 0) openWork(i);
+  if (i >= 0) openWork(i, { x: e.clientX, y: e.clientY });
 });
 
 // chapter words: fade out, change, fade in

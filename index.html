@@ -85,25 +85,58 @@
       <a class="pill-link" id="pill"><span>Get in touch</span><span class="pill-go" aria-hidden="true">↗</span></a>
     </main>
 
-    <dialog class="work-modal" id="work-modal" aria-labelledby="wm-title">
-      <header class="wm-head">
-        <div>
-          <p class="mono wm-tag" id="wm-tag"></p>
-          <h3 class="wm-title" id="wm-title"></h3>
-          <p class="wm-desc" id="wm-desc"></p>
-          <div class="wm-live" id="wm-live"></div>
-        </div>
-        <button class="wm-close" id="wm-close" aria-label="Close the case study">✕</button>
-      </header>
-      <div class="wm-stage" id="wm-stage"></div>
-      <div class="wm-cols">
-        <div class="wm-body" id="wm-body"></div>
-        <dl class="wm-meta" id="wm-meta"></dl>
+    <!-- a project's case study: a full page that opens over the trip -->
+    <dialog class="cs" id="work-modal" aria-labelledby="wm-title">
+      <div class="cs-scroll" id="cs-scroll">
+        <header class="cs-bar">
+          <button class="cs-back mono" id="wm-close"><span aria-hidden="true">←</span> Back to Saturn</button>
+          <p class="cs-count mono" id="wm-count"></p>
+          <div class="cs-arrows">
+            <button class="cs-arrow" id="wm-prev" aria-label="Previous project">←</button>
+            <button class="cs-arrow" id="wm-next" aria-label="Next project">→</button>
+          </div>
+        </header>
+
+        <section class="cs-hero">
+          <p class="cs-kick mono" id="wm-tag"></p>
+          <h3 class="cs-title" id="wm-title"><span class="cs-title-n" id="wm-num"></span><b id="wm-name"></b></h3>
+          <div class="cs-intro">
+            <p class="cs-desc" id="wm-desc"></p>
+            <div id="wm-live"></div>
+          </div>
+          <dl class="cs-meta" id="wm-meta"></dl>
+        </section>
+
+        <figure class="cs-shot" id="wm-stage"></figure>
+
+        <section class="cs-band">
+          <div class="cs-brief">
+            <h4 class="mono">The brief</h4>
+            <p id="wm-brief"></p>
+          </div>
+          <dl class="cs-facts" id="wm-facts"></dl>
+        </section>
+
+        <section class="cs-built">
+          <h4 class="cs-h">What I built</h4>
+          <ol id="wm-built"></ol>
+        </section>
+
+        <section class="cs-result">
+          <h4 class="mono">The result</h4>
+          <p id="wm-result"></p>
+        </section>
+
+        <a class="cs-next" id="wm-next-card">
+          <span class="cs-next-txt">
+            <span class="mono">Next case study</span>
+            <b id="wm-next-name"></b>
+            <span class="cs-next-tag mono" id="wm-next-tag"></span>
+          </span>
+          <span class="cs-next-img" id="wm-next-img"></span>
+          <span class="cs-next-go" aria-hidden="true">↗</span>
+        </a>
       </div>
-      <nav class="wm-nav" aria-label="Other projects">
-        <button id="wm-prev"><span class="mono">← Previous</span><b id="wm-prev-name"></b></button>
-        <button id="wm-next"><span class="mono">Next →</span><b id="wm-next-name"></b></button>
-      </nav>
     </dialog>
 
     <div id="loader">

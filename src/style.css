@@ -577,185 +577,435 @@ html.over-screen body {
   pointer-events: none !important;
 }
 
-/* project case study */
-.work-modal {
-  width: min(1040px, calc(100vw - 32px));
-  max-height: calc(100dvh - 32px);
-  overflow-y: auto;
-  overscroll-behavior: contain;
-  padding: clamp(18px, 2.8vw, 36px);
-  border: 1px solid var(--hair);
-  border-radius: 18px;
-  background: rgb(18 12 14 / 0.72);
-  backdrop-filter: blur(26px) saturate(1.3);
+/* project case study: a full page over the trip, in the project's colour */
+.cs {
+  --pad: clamp(18px, 4.5vw, 64px);
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  max-height: none;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: #0b0809;
   color: var(--ink);
   font-family: var(--sans);
+  overflow: hidden;
 }
-.work-modal::backdrop {
-  background: rgb(0 0 0 / 0.5);
+.cs::backdrop {
+  background: transparent;
 }
-.work-modal[open] {
-  animation: pop 0.45s cubic-bezier(0.2, 0.7, 0.2, 1);
+/* it opens as a circle growing from where you clicked, and closes back into it */
+.cs[open] {
+  animation: cs-in 0.75s cubic-bezier(0.7, 0, 0.2, 1) both;
 }
-@keyframes pop {
+.cs.closing {
+  animation: cs-out 0.48s cubic-bezier(0.7, 0, 0.84, 0) both;
+}
+@keyframes cs-in {
   from {
-    opacity: 0;
-    transform: translateY(20px) scale(0.98);
+    clip-path: circle(0 at var(--ox, 50%) var(--oy, 50%));
+  }
+  to {
+    clip-path: circle(150vmax at var(--ox, 50%) var(--oy, 50%));
   }
 }
-.wm-head {
-  display: flex;
-  justify-content: space-between;
-  gap: 20px;
+@keyframes cs-out {
+  from {
+    clip-path: circle(150vmax at var(--ox, 50%) var(--oy, 50%));
+  }
+  to {
+    clip-path: circle(0 at var(--ox, 50%) var(--oy, 50%));
+  }
 }
-.wm-tag {
-  color: var(--pc);
+.cs-scroll {
+  height: 100%;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 0 var(--pad) var(--pad);
+  transition: opacity 0.22s ease;
 }
-.wm-title {
-  margin: 8px 0;
-  font-size: clamp(1.6rem, 3vw, 2.4rem);
-  font-weight: 300;
-  letter-spacing: -0.03em;
+.cs-scroll.swap {
+  opacity: 0;
 }
-.wm-desc {
-  color: var(--soft);
-  max-width: 52ch;
-  line-height: 1.4;
+.cs-scroll > * {
+  max-width: 1240px;
+  margin-inline: auto;
 }
-.wm-close {
-  width: 34px;
-  height: 34px;
-  flex: none;
-  border-radius: 50%;
-  border: 1px solid var(--hair);
-  font-size: 0.8rem;
+.cs[open] .cs-hero > *,
+.cs[open] .cs-shot {
+  animation: cs-rise 0.8s cubic-bezier(0.2, 0.7, 0.2, 1) both;
 }
-.wm-stage {
+.cs[open] .cs-hero > :nth-child(1) {
+  animation-delay: 0.3s;
+}
+.cs[open] .cs-hero > :nth-child(2) {
+  animation-delay: 0.36s;
+}
+.cs[open] .cs-hero > :nth-child(3) {
+  animation-delay: 0.44s;
+}
+.cs[open] .cs-hero > :nth-child(4) {
+  animation-delay: 0.5s;
+}
+.cs[open] .cs-shot {
+  animation-delay: 0.56s;
+}
+@keyframes cs-rise {
+  from {
+    opacity: 0;
+    transform: translateY(28px);
+  }
+}
+
+/* top bar: back, where you are, previous and next */
+.cs-bar {
+  position: sticky;
+  top: 0;
+  z-index: 2;
   display: grid;
-  place-items: center;
-  aspect-ratio: 16 / 9;
-  margin-top: 20px;
-  border-radius: 10px;
-  overflow: hidden;
-  background: linear-gradient(135deg, var(--pc), color-mix(in oklab, var(--pc) 25%, #000));
-  color: rgb(255 255 255 / 0.75);
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  max-width: none;
+  margin-inline: calc(var(--pad) * -1);
+  padding: 16px var(--pad);
+  background: linear-gradient(#0b0809 55%, rgb(11 8 9 / 0));
 }
-.wm-shot {
-  display: block;
-  width: 100%;
-  height: 100%;
-}
-.wm-stage img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: top;
-  transition: transform 0.6s cubic-bezier(0.2, 0.7, 0.2, 1);
-}
-a.wm-shot:hover img {
-  transform: scale(1.02);
-}
-.wm-live {
-  margin-top: 16px;
-}
-.wm-visit {
+.cs-back {
+  justify-self: start;
   display: inline-flex;
-  padding: 11px 18px;
-  border-radius: 99px;
-  background: var(--pc);
-  color: #0a0606;
-  font-size: 0.86rem;
-  font-weight: 600;
-}
-.wm-cols {
-  display: grid;
-  grid-template-columns: 1.5fr 1fr;
-  gap: clamp(20px, 4vw, 48px);
-  margin-top: 26px;
-}
-.wm-body {
-  display: grid;
-  gap: 22px;
-}
-.wm-body h4,
-.wm-meta dt {
-  margin-bottom: 8px;
-  color: var(--pc);
-  font-size: 0.72rem;
-  font-weight: 500;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-}
-.wm-body p,
-.wm-body li {
-  color: var(--soft);
-  line-height: 1.55;
-}
-.wm-body ul {
-  display: grid;
-  gap: 8px;
-  padding-left: 1.1em;
-}
-.wm-body li::marker {
-  color: var(--pc);
-}
-.wm-meta {
-  display: grid;
-  align-content: start;
-  gap: 4px;
-}
-.wm-meta dd {
-  margin-bottom: 14px;
-  line-height: 1.45;
-}
-.wm-meta dd a {
-  text-decoration: underline;
-  text-underline-offset: 3px;
-}
-.wm-chips {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-}
-.wm-chips span {
-  padding: 5px 10px;
+  gap: 10px;
+  align-items: center;
+  padding: 10px 16px;
   border: 1px solid var(--hair);
   border-radius: 99px;
-  font-size: 0.72rem;
-}
-.wm-nav {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 12px;
-  margin-top: 28px;
-  padding-top: 20px;
-  border-top: 1px solid var(--hair);
-}
-.wm-nav button {
-  display: grid;
-  gap: 4px;
-  padding: 12px 14px;
-  border: 1px solid var(--hair);
-  border-radius: 12px;
-  text-align: left;
   transition: border-color 0.3s ease;
 }
-.wm-nav button:last-child {
-  text-align: right;
+.cs-back:hover {
+  border-color: var(--ink);
 }
-.wm-nav button:hover {
-  border-color: var(--pc);
-}
-.wm-nav span {
+.cs-count {
   color: var(--faint);
+}
+.cs-arrows {
+  justify-self: end;
+  display: flex;
+  gap: 8px;
+}
+.cs-arrow {
+  width: 42px;
+  height: 42px;
+  border: 1px solid var(--hair);
+  border-radius: 50%;
+  transition:
+    background 0.3s ease,
+    color 0.3s ease,
+    border-color 0.3s ease;
+}
+.cs-arrow:hover {
+  background: var(--pc);
+  border-color: var(--pc);
+  color: var(--pc-ink);
+}
+
+/* opening: a big two-tone title, the short story, and the facts in a row */
+.cs-hero {
+  padding: clamp(28px, 7vh, 80px) 0 clamp(28px, 5vh, 56px);
+}
+.cs-kick {
+  color: var(--pc);
+}
+.cs-title {
+  margin: 18px 0 clamp(22px, 4vh, 40px);
+  font-size: clamp(2.7rem, 8.4vw, 7.4rem);
+  line-height: 0.95;
+  letter-spacing: -0.045em;
+}
+.cs-title-n {
+  display: block;
+  font-weight: 300;
+  color: var(--soft);
+}
+.cs-title b {
+  display: block;
+  font-weight: 600;
+  color: var(--pc);
+}
+.cs-intro {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: end;
+  justify-content: space-between;
+  gap: 20px 40px;
+}
+.cs-desc {
+  max-width: 50ch;
+  font-size: clamp(1.05rem, 1.5vw, 1.3rem);
+  line-height: 1.5;
+  color: var(--soft);
+}
+.cs-visit {
+  display: inline-flex;
+  padding: 14px 22px;
+  border-radius: 99px;
+  background: var(--pc);
+  color: var(--pc-ink);
+  font-weight: 600;
+  transition: transform 0.3s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+.cs-visit:hover {
+  transform: translateY(-2px);
+}
+.cs-meta {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
+  margin-top: clamp(30px, 6vh, 64px);
+  padding-top: 22px;
+  border-top: 1px solid var(--hair);
+}
+.cs-meta dt,
+.cs-band h4,
+.cs-result h4 {
+  margin-bottom: 10px;
+  font-size: 0.72rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+.cs-meta dt {
+  color: var(--faint);
+}
+.cs-meta dd {
+  line-height: 1.45;
+}
+
+/* the screenshot, in a browser window: click it to open the live site */
+.cs-shot {
+  margin-block: 0 clamp(40px, 8vh, 96px);
+}
+.cs-win {
+  display: block;
+  overflow: hidden;
+  border: 1px solid var(--hair);
+  border-radius: 16px;
+  background: #151012;
+  box-shadow: 0 40px 120px -40px color-mix(in oklab, var(--pc) 55%, transparent);
+  transition: transform 0.6s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+a.cs-win:hover {
+  transform: translateY(-6px);
+}
+.cs-chrome {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  height: 40px;
+  padding: 0 14px;
+  border-bottom: 1px solid var(--hair);
+}
+.cs-chrome i {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--hair);
+}
+.cs-url {
+  margin-inline: auto;
+  padding: 4px 14px;
+  border-radius: 99px;
+  background: rgb(255 255 255 / 0.06);
+  color: var(--soft);
   font-size: 0.72rem;
 }
-.wm-nav b {
-  font-weight: 400;
+.cs-win img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  object-position: top;
 }
-@media (max-width: 700px) {
-  .wm-cols {
+
+/* the brief and the big numbers, on a solid band of the project colour */
+.cs-band {
+  display: grid;
+  grid-template-columns: 1.3fr 1fr;
+  gap: clamp(28px, 5vw, 80px);
+  padding: clamp(28px, 5vw, 72px);
+  border-radius: 24px;
+  background: var(--pc);
+  color: var(--pc-ink);
+}
+.cs-brief p {
+  font-size: clamp(1.35rem, 2.6vw, 2.2rem);
+  line-height: 1.25;
+  letter-spacing: -0.02em;
+}
+.cs-facts {
+  display: grid;
+  align-content: start;
+}
+.cs-facts div {
+  padding: 16px 0;
+  border-top: 1px solid color-mix(in oklab, currentColor 28%, transparent);
+}
+.cs-facts div:first-child {
+  border-top: 0;
+  padding-top: 0;
+}
+.cs-facts dt {
+  font-size: clamp(2.4rem, 5.4vw, 4.6rem);
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: -0.04em;
+}
+.cs-facts dd {
+  margin-top: 8px;
+  font-size: 0.74rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  opacity: 0.8;
+}
+
+/* what was built: numbered, three across */
+.cs-built {
+  padding-block: clamp(48px, 10vh, 120px) clamp(28px, 5vh, 56px);
+}
+.cs-h {
+  margin-bottom: clamp(24px, 5vh, 48px);
+  font-size: clamp(2.1rem, 5vw, 4.2rem);
+  font-weight: 600;
+  letter-spacing: -0.04em;
+}
+.cs-built ol {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: clamp(18px, 3vw, 40px);
+  list-style: none;
+}
+.cs-built li {
+  padding-top: 18px;
+  border-top: 1px solid var(--hair);
+}
+.cs-built li span {
+  color: var(--pc);
+}
+.cs-built li p {
+  margin-top: 14px;
+  color: var(--soft);
+  font-size: 1.05rem;
+  line-height: 1.55;
+}
+
+/* the result, said big */
+.cs-result {
+  padding-block: clamp(28px, 6vh, 72px) clamp(48px, 10vh, 120px);
+}
+.cs-result h4 {
+  color: var(--pc);
+}
+.cs-result p {
+  max-width: 24ch;
+  font-size: clamp(1.9rem, 4.6vw, 4rem);
+  font-weight: 300;
+  line-height: 1.1;
+  letter-spacing: -0.035em;
+}
+
+/* the next project, as a big card */
+.cs-next {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr 1.1fr;
+  min-height: clamp(240px, 36vw, 420px);
+  overflow: hidden;
+  border-radius: 24px;
+  background: color-mix(in oklab, var(--nc) 22%, #0b0809);
+  color: var(--ink);
+  text-decoration: none;
+  transition: background 0.5s ease;
+}
+.cs-next:hover {
+  background: color-mix(in oklab, var(--nc) 38%, #0b0809);
+}
+.cs-next-txt {
+  display: grid;
+  align-content: start;
+  gap: 14px;
+  padding: clamp(24px, 4vw, 48px);
+}
+.cs-next-txt > .mono {
+  color: var(--soft);
+}
+.cs-next-txt b {
+  font-size: clamp(2rem, 4.6vw, 3.8rem);
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: -0.04em;
+}
+.cs-next-tag {
+  justify-self: start;
+  padding: 5px 12px;
+  border: 1px solid var(--hair);
+  border-radius: 99px;
+  font-size: 0.72rem;
+}
+.cs-next-img {
+  margin: clamp(14px, 2vw, 22px) clamp(14px, 2vw, 22px) clamp(14px, 2vw, 22px) 0;
+  border-radius: 16px;
+  background: center top / cover no-repeat;
+  transition: transform 0.7s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+.cs-next:hover .cs-next-img {
+  transform: scale(1.02);
+}
+.cs-next-go {
+  position: absolute;
+  left: clamp(24px, 4vw, 48px);
+  bottom: clamp(20px, 3vw, 40px);
+  font-size: clamp(2rem, 4vw, 3.2rem);
+  line-height: 1;
+  transition: transform 0.4s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+.cs-next:hover .cs-next-go {
+  transform: translate(6px, -6px);
+}
+
+@media (max-width: 800px) {
+  .cs-count {
+    display: none;
+  }
+  .cs-bar {
+    grid-template-columns: 1fr auto;
+  }
+  .cs-meta {
+    grid-template-columns: 1fr 1fr;
+  }
+  .cs-band,
+  .cs-built ol {
     grid-template-columns: 1fr;
+  }
+  .cs-next {
+    grid-template-columns: 1fr;
+  }
+  .cs-next-img {
+    min-height: 200px;
+    margin: 0 16px 16px;
+  }
+  .cs-next-go {
+    top: clamp(24px, 4vw, 48px);
+    right: 24px;
+    left: auto;
+    bottom: auto;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .cs[open],
+  .cs.closing,
+  .cs[open] .cs-hero > *,
+  .cs[open] .cs-shot {
+    animation: none;
   }
 }
 
