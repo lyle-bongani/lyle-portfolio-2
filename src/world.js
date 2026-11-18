@@ -4,6 +4,27 @@
 // and the camera chases him.
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+
+// Load a model, and if the download fails (a dropped connection, a slow phone network) try again
+// a couple of times before giving up, so one bad request does not stop the whole trip.
+function loadGLB(url, onLoad, onProgress, onError, tries = 3) {
+  const built = (g) => {
+    // a mistake in the code that builds the scene is not a download problem: report it, do not re-download
+    try {
+      onLoad(g);
+    } catch (err) {
+      console.error(`Could not build the scene from ${url}`, err);
+      onError?.(err);
+    }
+  };
+  new GLTFLoader().load(url, built, onProgress, (err) => {
+    if (tries > 1) setTimeout(() => loadGLB(url, onLoad, onProgress, onError, tries - 1), 900);
+    else {
+      console.error(`Could not load ${url}`, err);
+      onError?.(err);
+    }
+  });
+}
 import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
 import { projects } from './content.js';
 
@@ -360,7 +381,7 @@ export function createWorld(renderer, onProgress) {
   galaxyGlow.position.copy(GALAXY.c);
   galaxyGlow.visible = false;
   scene.add(galaxyGlow);
-  new GLTFLoader().load(`${import.meta.env.BASE_URL}models/milkyway.glb`, (g) => {
+  loadGLB(`${import.meta.env.BASE_URL}models/milkyway.glb`, (g) => {
     const disc = g.scene.getObjectByName('MilkyWay');
     galaxyMat.map = disc.material.map;
     galaxyMat.needsUpdate = true;
@@ -517,8 +538,7 @@ export function createWorld(renderer, onProgress) {
   };
 
   const propsReady = new Promise((resolve, reject) => {
-    const loader = new GLTFLoader();
-    loader.load(`${import.meta.env.BASE_URL}models/nature.glb`, (nat) => {
+    loadGLB(`${import.meta.env.BASE_URL}models/nature.glb`, (nat) => {
       growGrass(nat.scene);
       // two scanned boulders (Poly Haven), darkened to sit in these worlds
       const scans = ['ScanRock_A', 'ScanRock_B'].map((nm) => {
@@ -528,7 +548,7 @@ export function createWorld(renderer, onProgress) {
         return o;
       });
       const scanRock = (i) => new THREE.Mesh(scans[i % 2].geometry, scans[i % 2].material);
-      loader.load(
+      loadGLB(
         `${import.meta.env.BASE_URL}models/props.glb`,
         (gltf) => {
           // index every part by name first: parts get moved out of this file as they are placed
@@ -611,7 +631,7 @@ export function createWorld(renderer, onProgress) {
           get('Door_Light').material = new THREE.MeshBasicMaterial({ color: hot(1.5, 0.6, 0.34), side: THREE.DoubleSide, fog: false });
           [[-30, 21, 1.5], [22, -22, 1.2], [38, 19, 1.8]].forEach(([al, ac, s], i) => placeOn(scanRock(i + 1), PLANETS.pluto, al, ac, rnd() * 6, s, 0.3));
 
-          new GLTFLoader().load(`${import.meta.env.BASE_URL}models/hero_v2.glb`, (h) => {
+          loadGLB(`${import.meta.env.BASE_URL}models/hero_v2.glb`, (h) => {
             hero.setup(h);
             resolve();
           }, undefined, reject);
@@ -624,7 +644,7 @@ export function createWorld(renderer, onProgress) {
 
   // the solar system, built in Blender
   const solarReady = new Promise((resolve, reject) => {
-    new GLTFLoader().load(`${import.meta.env.BASE_URL}models/solar.glb`, (sol) => {
+    loadGLB(`${import.meta.env.BASE_URL}models/solar.glb`, (sol) => {
       const parts = {};
       sol.scene.traverse((o) => { parts[o.name] = o; });
       const body = (name, centre, radius, parent = scene, spin = 0.004) => {

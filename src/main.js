@@ -420,5 +420,9 @@ world.ready
   })
   .catch((err) => {
     console.error(err);
-    $('loader-k').textContent = 'The 3D models failed to load';
+    $('loader-k').textContent = 'The 3D worlds did not load. Check your connection and try again.';
+    const again = el('button', 'enter-btn on', 'Try again');
+    again.addEventListener('click', () => location.reload());
+    $('loader-enter').replaceChildren(again);
+    $('loader-enter').hidden = false;
   });
